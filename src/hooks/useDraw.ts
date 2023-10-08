@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from "react"
-export const useDraw = () => {
+export const useDraw = (onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
 
@@ -8,7 +8,7 @@ export const useDraw = () => {
 
         const handler = (e: MouseEvent) => {
             const currentPoint = computePointInCanvas(e);
-
+            console.log(currentPoint)
             const ctx = canvasRef.current?.getContext("2d")
             if (!ctx || !currentPoint) return
 
@@ -19,7 +19,7 @@ export const useDraw = () => {
             if (!canvas) return
 
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
+            const x = Math.floor(e.clientX - rect.left);
             const y = e.clientY - rect.top;
 
             return { x, y }
