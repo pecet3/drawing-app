@@ -7,6 +7,13 @@ export const useDraw = (onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void
 
     const onMouseDown = () => setIsMouseDown(true)
 
+    const clear = () => {
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
 
     useEffect(() => {
 
@@ -29,8 +36,8 @@ export const useDraw = (onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void
             if (!canvas) return
 
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left
-            const y = e.clientY - rect.top;
+            const x = Math.floor(e.clientX - rect.left)
+            const y = Math.floor(e.clientY - rect.top)
 
             return { x, y }
         }
@@ -43,5 +50,5 @@ export const useDraw = (onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void
         }
     }, [onDraw])
 
-    return { canvasRef, onMouseDown }
+    return { canvasRef, onMouseDown, clear }
 }
