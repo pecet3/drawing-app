@@ -1,9 +1,9 @@
 "use client";
-import Image from "next/image";
 import { useDraw } from "../hooks/useDraw";
 import { SketchPicker } from "react-color";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import { drawLine } from "../../utils/drawLine";
 
 const socket = io("http://localhost:3001");
 export default function Home() {
@@ -13,6 +13,22 @@ export default function Home() {
 
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
+
+    socket.emit("client-ready");
+
+    socket.on("get-canvas-state", () => {
+      if (!canvasRef.current?.toDataURL()) return;
+      socket.emit("canvas-state", canvasRef.current.toDataURL());
+    });
+
+    socket.on("canvas-state-from-server", (state: string) => {
+      const img = new Image();
+      img.src = state;
+
+      img.onload = () => {
+        ctx?.drawImage(img, 0, 0);
+      };
+    });
     socket.on(
       "draw-line",
       ({ prevPoint, currentPoint, color, size }: SocketResponse) => {
@@ -20,34 +36,15 @@ export default function Home() {
         drawLine({ prevPoint, currentPoint, ctx, color, size });
       }
     );
-  }, []);
-  function drawLine({
-    prevPoint,
-    currentPoint,
-    ctx,
-    color,
-    size,
-  }: DrawWithProps) {
-    const { x: currX, y: currY } = currentPoint;
+    socket.on("clear", clear);
 
-    let startPoint = prevPoint ?? currentPoint;
-
-    ctx.beginPath();
-    ctx.lineWidth = size;
-    ctx.strokeStyle = color;
-
-    ctx.moveTo(startPoint.x, startPoint.y);
-
-    ctx.lineTo(currX, currY);
-    ctx.stroke();
-
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(startPoint.x, startPoint.y, size, 0, 4 * Math.PI);
-
-    ctx.fill();
-    ctx.closePath();
-  }
+    return () => {
+      socket.off("get-canvas-state");
+      socket.off("canvas-state-from-server");
+      socket.off("draw-line");
+      socket.off("clear");
+    };
+  }, [canvasRef]);
 
   function createLine({ prevPoint, currentPoint, ctx }: Draw) {
     socket.emit("draw-line", { prevPoint, currentPoint, ctx, color, size });
@@ -55,7 +52,7 @@ export default function Home() {
   }
   return (
     <main className="flex min-h-screen justify-center items-start gap-4 p-8">
-      <section className="flex flex-col justify-between bg-purple-400 p-2 rounded-md gap-2 shadow-md shadow-slate-500">
+      <section className="hidden sm:flex flex-col justify-between bg-purple-400 p-2 rounded-md gap-2 shadow-md shadow-slate-500">
         <SketchPicker color={color} onChange={(e) => setColor(e.hex)} />
         <div className="flex flex-col">
           <input
@@ -70,17 +67,19 @@ export default function Home() {
           />
           size: {size}
         </div>
-        <button onClick={clear} className="">
+        <button onClick={() => socket.emit("clear")} className="">
           Clear All
         </button>
       </section>
-      <canvas
-        width={720}
-        height={720}
-        className="border-4 rounded-lg border-purple-400 shadow-md shadow-slate-800 bg-white"
-        ref={canvasRef}
-        onMouseDown={onMouseDown}
-      />
+      <div className="h-[640px] sm:w-[640px] overflow-auto ring-4 rounded-lg ring-purple-400">
+        <canvas
+          width={3200}
+          height={2000}
+          className=" shadow-md shadow-slate-800 bg-white"
+          ref={canvasRef}
+          onMouseDown={onMouseDown}
+        />
+      </div>
     </main>
   );
 }
