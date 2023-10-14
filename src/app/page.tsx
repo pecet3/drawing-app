@@ -75,7 +75,7 @@ export default function Home() {
         <canvas
           width={3200}
           height={2000}
-          className=" shadow-md shadow-slate-800 bg-white"
+          className=" shadow-md shadow-slate-800 bg-white hover:cursor-crosshair"
           ref={canvasRef}
           onMouseDown={onMouseDown}
         />
