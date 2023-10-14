@@ -9,7 +9,7 @@ const socket = io("https://jakubpacewi.cz");
 export default function Home() {
   const { canvasRef, onMouseDown, clear } = useDraw(createLine);
   const [color, setColor] = useState("#000");
-  const [size, setSize] = useState<number>(0);
+  const [size, setSize] = useState<number>(1);
 
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
@@ -57,8 +57,8 @@ export default function Home() {
         <div className="flex flex-col">
           <input
             type="range"
-            min={0}
-            max={10}
+            min={1}
+            max={3}
             step={1}
             value={size}
             onChange={(e) =>
@@ -67,9 +67,9 @@ export default function Home() {
           />
           size: {size}
         </div>
-        <button onClick={() => socket.emit("clear")} className="">
+        {/* <button onClick={() => socket.emit("clear")} className="">
           Clear All
-        </button>
+        </button> */}
       </section>
       <div className="h-[640px] sm:w-[640px] overflow-auto ring-4 rounded-lg ring-purple-400">
         <canvas
