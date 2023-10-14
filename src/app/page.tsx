@@ -71,7 +71,7 @@ export default function Home() {
           Clear All
         </button> */}
       </section>
-      <div className="h-[640px] sm:w-[640px] ring-4 rounded-lg ring-purple-400">
+      <div className="h-[640px] sm:w-[640px] overflow-auto ring-4 rounded-lg ring-purple-400">
         <canvas
           width={3200}
           height={2000}
