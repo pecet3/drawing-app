@@ -22,6 +22,9 @@ export const useDraw = (onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void
             const currentPoint = computePointInCanvas(e);
             const ctx = canvasRef.current?.getContext("2d")
             if (!ctx || !currentPoint) return
+            // ctx.fillText("test", currentPoint.x, currentPoint.y);
+
+
 
             onDraw({ ctx, currentPoint, prevPoint: prevPoint.current })
             prevPoint.current = currentPoint
