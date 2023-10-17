@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { drawLine } from "../../utils/drawLine";
 
-const socket = io("https://jakubpacewi.:8080:");
+const socket = io("https://paint-online-backend.onrender.com/");
 export default function Home() {
   const { canvasRef, onMouseDown, clear } = useDraw(createLine);
   const [color, setColor] = useState("#000");
