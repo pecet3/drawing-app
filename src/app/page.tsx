@@ -52,7 +52,7 @@ export default function Home() {
   }
   return (
     <main className="flex min-h-screen justify-center items-start gap-4 p-8">
-      <section className="hidden sm:flex flex-col justify-between bg-purple-400 p-2 rounded-md gap-2 shadow-md shadow-slate-500">
+      <section className="hidden sm:flex flex-col justify-between bg-gray-400 p-2  shadow-slate-500">
         <SketchPicker color={color} onChange={(e) => setColor(e.hex)} />
         <div className="flex flex-col">
           <input
@@ -71,7 +71,7 @@ export default function Home() {
           Clear All
         </button> */}
       </section>
-      <div className="h-[640px] sm:w-[640px] overflow-auto ring-4 rounded-lg ring-purple-400">
+      <div className="h-[640px] sm:w-[640px] overflow-auto ring-4  ring-gray-500">
         <canvas
           width={3200}
           height={2000}
