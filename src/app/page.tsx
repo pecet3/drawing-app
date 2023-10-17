@@ -53,7 +53,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen justify-center items-start gap-4 p-8">
       <section className="hidden sm:flex flex-col justify-between bg-purple-400 p-2 rounded-md gap-2 shadow-md shadow-slate-500">
-        {/* <SketchPicker color={color} onChange={(e) => setColor(e.hex)} /> */}
+        <SketchPicker color={color} onChange={(e) => setColor(e.hex)} />
         <div className="flex flex-col">
           <input
             type="range"
